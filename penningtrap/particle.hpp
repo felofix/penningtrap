@@ -5,6 +5,7 @@
 //  Created by Felix Aarekol Forseth on 30/09/2022.
 //
 
+#ifndef particle_hpp
 #define particle_hpp
 
 #include <stdio.h>
@@ -27,3 +28,4 @@ public:
     
 };
 
+#endif /* penningTrap_hpp */

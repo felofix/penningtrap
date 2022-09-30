@@ -5,7 +5,8 @@
 //  Created by Felix Aarekol Forseth on 30/09/2022.
 //
 
-#include <iostream> 
+#include <iostream>
+#include "particle.hpp"
 #include "penningTrap.hpp"
 
 int main(int argc, const char * argv[]) {
@@ -18,6 +19,4 @@ int main(int argc, const char * argv[]) {
 
     Particle calcium = Particle(cha, mas, posi, velo, forc, accel);
     PenningTrap pp = PenningTrap(0.2, 0.3, 0.4);
-    
-    calcium.printToScreen();
 }

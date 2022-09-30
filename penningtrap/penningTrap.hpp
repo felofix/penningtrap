@@ -30,7 +30,7 @@ public:
     // Calculate the external electric field at certain position, where a specific potential is used(outlined in the README file).
     arma::vec find_efield(arma::vec position);
     
-    // Calculate the external magnetic field.
+    // Calculate the external magnetic field, where a specific field is used(outlined in the README file).
     arma::vec find_mfield(arma::vec position);
     
     // Calculate force due to intneractions between particles.

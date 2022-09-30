@@ -26,3 +26,10 @@ arma::vec PenningTrap::find_efield(arma::vec position){
     position(2) = position(2)*gamma*(-2); // z
     return position;
 }
+
+arma::vec PenningTrap::find_mfield(arma::vec position);
+    position(0) = 0;  // x
+    position(1) = 0;  // y
+    position(2) = position(2)*B0; // z
+    return position;
+}
