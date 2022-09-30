@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <armadillo>
 #include <vector>
-#include "particle.hpp"     // Spørre hvordan jeg kan inkludere en folder med header filer.
+#include "particle.hpp"    
 
 class PenningTrap{
 public:
@@ -19,7 +19,8 @@ public:
     double V0;     // Applied electric field.
     double d;      // characteristic dimension.
     std::vector<Particle> particles; // Particles in penning trap.
-    double gamma;  // Difference. 
+    double gamma;  // Difference.
+    double ke = 1.38935333e5; 
     
     // Declaration function.
     PenningTrap(double b, double v, double d);
@@ -28,13 +29,19 @@ public:
     void printToScreen();
     
     // Calculate the external electric field at certain position, where a specific potential is used(outlined in the README file).
-    arma::vec find_efield(arma::vec position);
+    arma::vec find_efield(Particle P);
     
     // Calculate the external magnetic field, where a specific field is used(outlined in the README file).
-    arma::vec find_mfield(arma::vec position);
+    arma::vec find_mfield(Particle P);
+    
+    // Adding particle.
+    void add_particle(Particle add);
     
     // Calculate force due to intneractions between particles.
+    arma::vec force_from_particles(Particle pcheck);
     
+    // Total force of particle.
+    arma::vec total_force(Particle pcheck);
 };
 
 #endif /* penningTrap_hpp */
