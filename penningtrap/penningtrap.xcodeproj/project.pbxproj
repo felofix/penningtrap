@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		DC24A95A28E6B80D00198A1F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC24A95928E6B80D00198A1F /* main.cpp */; };
+		DC24A96228E6B88F00198A1F /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC24A96028E6B88F00198A1F /* particle.cpp */; };
+		DC24A96528E6E71300198A1F /* penningTrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC24A96328E6E71300198A1F /* penningTrap.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +27,10 @@
 /* Begin PBXFileReference section */
 		DC24A95628E6B80D00198A1F /* penningtrap */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = penningtrap; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC24A95928E6B80D00198A1F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		DC24A96028E6B88F00198A1F /* particle.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
+		DC24A96128E6B88F00198A1F /* particle.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = particle.hpp; sourceTree = "<group>"; };
+		DC24A96328E6E71300198A1F /* penningTrap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = penningTrap.cpp; sourceTree = "<group>"; };
+		DC24A96428E6E71300198A1F /* penningTrap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = penningTrap.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +47,10 @@
 		DC24A94D28E6B80D00198A1F = {
 			isa = PBXGroup;
 			children = (
+				DC24A96328E6E71300198A1F /* penningTrap.cpp */,
+				DC24A96428E6E71300198A1F /* penningTrap.hpp */,
+				DC24A96028E6B88F00198A1F /* particle.cpp */,
+				DC24A96128E6B88F00198A1F /* particle.hpp */,
 				DC24A95928E6B80D00198A1F /* main.cpp */,
 				DC24A95828E6B80D00198A1F /* penningtrap */,
 				DC24A95728E6B80D00198A1F /* Products */,
@@ -119,7 +129,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC24A96528E6E71300198A1F /* penningTrap.cpp in Sources */,
 				DC24A95A28E6B80D00198A1F /* main.cpp in Sources */,
+				DC24A96228E6B88F00198A1F /* particle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
