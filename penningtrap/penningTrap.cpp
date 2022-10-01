@@ -62,3 +62,9 @@ arma::vec PenningTrap::total_force(Particle pcheck){
     total += arma::cross(pcheck.velocity, find_mfield(pcheck)); // Force from magnetic field.
     return total;
 }
+
+arma::vec PenningTrap::total_acceleration(Particle pcheck){
+    arma::vec force = total_force(pcheck);
+    arma::vec accel = force/(pcheck.mass);
+    return accel;
+}

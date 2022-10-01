@@ -11,21 +11,28 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include "particle.hpp"
+#include "penningTrap.hpp"
 
 class Solver{
 public:
     double time;           // Length of simulation.
     double N;              // Steps of simulation.
     std::string filename;  // Name of files.
+    double dt;    // timestep.
     
     // Declaration function.
     Solver(double time, double N, std::string filename);
     
     // Solve with forward-Euler.
     // Needs to be solved for each particle.
-    void forwardEuler(vector<Particle> particles);
+    void SolveforwardEuler(PenningTrap pt);
+    
+    // Stepping forward like Euler would.
+    arma::mat forwardEulerStep(PenningTrap pt, Particle p);
     
     // Function to print to datafiles. 
+    void writetofilefloat(arma::vec timer, arma::mat xyz);
     
 };
 

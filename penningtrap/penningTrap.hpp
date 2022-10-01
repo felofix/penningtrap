@@ -42,6 +42,10 @@ public:
     
     // Total force of particle.
     arma::vec total_force(Particle pcheck);
+    
+    // Acceleration of particle.
+    arma::vec total_acceleration(Particle pcheck);
+    
 };
 
 #endif /* penningTrap_hpp */

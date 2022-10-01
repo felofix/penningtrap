@@ -8,13 +8,11 @@
 #include "particle.hpp"
 
 // Declaration function.
-Particle::Particle(double c, double m, arma::vec pos, arma::vec vel, arma::vec forc, arma::vec accel){
+Particle::Particle(double c, double m, arma::vec pos, arma::vec vel){
     charge = c;   // Charge of the particle,
     mass = m;     // Mass of particle.
     position = pos;  // Position of particle.
     velocity = vel;  // Velocity of particle. 
-    force = forc; // Force experienced by the particle.
-    acceleration  = accel;// Acelleration experienced by the particle.
 }
     // A nice function to print out all the values.
 void Particle::printToScreen(){
@@ -24,9 +22,5 @@ void Particle::printToScreen(){
     std::cout << position;
     std::cout << "Velocity: " << std::endl;
     std::cout << velocity;
-    std::cout << "Force: " << std::endl;
-    std::cout << force;
-    std::cout << "Acceleration: " << std::endl;
-    std::cout << acceleration;
 }
 
