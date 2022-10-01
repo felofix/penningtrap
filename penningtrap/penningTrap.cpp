@@ -30,7 +30,7 @@ arma::vec PenningTrap::find_efield(Particle P){
 
 arma::vec PenningTrap::find_mfield(Particle P){
     arma::vec m_field = {0, 0, 0};
-    m_field(2) = P.position(2)*B0; // z
+    m_field(2) = B0; // z
     return m_field;
 }
 

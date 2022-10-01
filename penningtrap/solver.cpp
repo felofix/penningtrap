@@ -19,12 +19,22 @@ void Solver::SolveforwardEuler(PenningTrap pt){
     arma::vec timer = arma::linspace(0, time, N);        // timer.
     arma::mat positions(N, pt.particles.size()*3); // Create a position matrix for all particles.
     
-    for (int i = 0; i < N; i++){ // For all timesteps loop.
+    for (int i = 0; i < N; i++){ // For all timesteps.
+        // Put it here so we get zeros if something isnt filled.
+        arma::mat temp(3, pt.particles.size()*2);      // temporary particle positions and veloicities.
+        for (int j = 0; j < pt.particles.size(); j++){ // For all particles.
+            arma::mat velpos = forwardEulerStep(pt, pt.particles[j]); // Forward-Euler step for paarticle j.
+            temp.col(j*2) = velpos.col(0);
+            temp.col(j*2+1) = velpos.col(1);
+        }
         
-        
-        
+        // Actually changing velocities and positions.
+        for (int p = 0; p < pt.particles.size(); p++){
+            pt.particles[p].velocity = temp.col(p*2);
+            pt.particles[p].position = temp.col(p*2+1);
+        }
+        std::cout << temp << std::endl;
     }
-    
     
     // update positions int he very end, so that  we get the correct force between particles. 
 }
