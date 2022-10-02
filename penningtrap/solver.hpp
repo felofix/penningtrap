@@ -32,7 +32,7 @@ public:
     arma::mat forwardEulerStep(PenningTrap pt, Particle p);
     
     // Function to print to datafiles. 
-    void writetofilefloat(arma::vec timer, arma::mat xyz);
+    void writetofilefloat(arma::vec timer, arma::mat xyz, std::string direc);
     
 };
 
