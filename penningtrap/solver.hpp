@@ -28,8 +28,14 @@ public:
     // Needs to be solved for each particle.
     void SolveforwardEuler(PenningTrap pt);
     
+    // Solving with Runge-Kutta.
+    void RungeKutta(PenningTrap p);
+    
     // Stepping forward like Euler would.
     arma::mat forwardEulerStep(PenningTrap pt, Particle p);
+    
+    // Runge kutta half step.
+    arma::mat forwardRKStep(PenningTrap pt, Particle p);
     
     // Function to print to datafiles. 
     void writetofilefloat(arma::vec timer, arma::mat xyz, std::string direc);
