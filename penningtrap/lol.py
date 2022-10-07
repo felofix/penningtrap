@@ -59,7 +59,6 @@ plt.legend()
 plt.show()
 """
 
-<<<<<<< HEAD
 """# 3D plot without.
 fig = plt.figure()
 ax = plt.axes(projection='3d')
@@ -77,6 +76,4 @@ ax.plot3D(Both2vel[:, 1], Both2vel[:, 2], Both2vel[:, 3], color=halloween[1], la
 ax.legend()
 plt.show()
 """
-=======
-#Test for å se :-)
->>>>>>> 3f0cec73ffd454f0bacee8efa9fcb21b474604cf
+
