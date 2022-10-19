@@ -20,10 +20,11 @@ public:
     double d;      // characteristic dimension.
     std::vector<Particle> particles; // Particles in penning trap.
     double gamma;  // Difference.
-    double ke = 1.38935333e5; 
+    double ke = 1.38935333e5;
+    bool coulumb;
     
     // Declaration function.
-    PenningTrap(double b, double v, double d);
+    PenningTrap(double b, double v, double d, bool coul);
     
     // A nice function to print out all the values.
     void printToScreen();
@@ -46,6 +47,11 @@ public:
     // Acceleration of particle.
     arma::vec total_acceleration(Particle pcheck);
     
+    // counting number of particles in trap.
+    int count_particles();
+    
+    // filling the penningtrap with random particles.
+    void fill_with_particles(int number, double charge, double mass);
 };
 
 #endif /* penningTrap_hpp */

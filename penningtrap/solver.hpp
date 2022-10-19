@@ -20,9 +20,12 @@ public:
     double N;              // Steps of simulation.
     std::string filename;  // Name of files.
     double dt;    // timestep.
+    bool etimedep; // time dependant electric field.
+    double f; // amplitude
+    double omegaV; // angular frequency.
     
     // Declaration function.
-    Solver(double time, double N, std::string filename);
+    Solver(double time, double N, std::string filename, bool etimedep, double f, double omegaV);
     
     // Solve with forward-Euler.
     // Needs to be solved for each particle.
@@ -35,7 +38,7 @@ public:
     arma::mat forwardEulerStep(PenningTrap pt, Particle p);
     
     // Runge kutta half step.
-    arma::mat forwardRKStep(PenningTrap pt, Particle p);
+    arma::mat forwardRKStep(PenningTrap pt, Particle p, double ddt, arma::vec vel, arma::vec pos);
     
     // Function to print to datafiles. 
     void writetofilefloat(arma::vec timer, arma::mat xyz, std::string direc);
