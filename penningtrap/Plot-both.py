@@ -16,19 +16,19 @@ Both2poseuler = np.loadtxt("datafiles/pos_euler_part_1Both.txt")
 Both1vel = np.loadtxt("datafiles/vel_runge_part_0Both.txt")
 Both2vel = np.loadtxt("datafiles/vel_runge_part_1Both.txt")
 
+
 # Position in z direction for single particle.
 plt.plot(Single1pos[:, 0], Single1pos[:, 3], label='Runge', color='black')
-plt.plot(Single1poseuler[:, 0], Single1poseuler[:, 3], label='Euler', color=halloween[1])
+#plt.plot(Single1poseuler[:, 0], Single1poseuler[:, 3], label='Euler', color=halloween[1])
 plt.xlabel('Time [t]')
 plt.grid()
 plt.ylabel('z(t) [$\mu m$]')
 plt.legend()
 plt.show()
 
-
 # Position xy without interaction..
 plt.plot(Single1pos[:, 1], Single1pos[:, 2], label='Particle 1', color='black')
-plt.plot(Single2pos[:, 1], Single2pos[:, 2], label='Particle 2', color=halloween[0])
+#plt.plot(Single2pos[:, 1], Single2pos[:, 2], label='Particle 2', color=halloween[0])
 plt.axis('equal')
 plt.grid()
 plt.xlabel('x [$\mu m$]')

@@ -35,7 +35,8 @@ int main(int argc, const char * argv[]) {
     double n3 = 16000;
     double n4 = 32000;
     
-    // Classes. 
+    // Classes.
+    
     arma::vec posi1 = {p1x0, 0, p1z0};
     arma::vec posi2 = {p2x0, p2y0, 0};
     arma::vec vel = {0, p1ydot, 0};
@@ -53,32 +54,58 @@ int main(int argc, const char * argv[]) {
     pp3.add_particle(calcium2);
     
     // Solving for particles.
-    Solver solve = Solver(time, n, "Single1.txt", false, 0, 0);
-    Solver solve2 = Solver(time, n, "Single2.txt", false, 0, 0);
-    Solver solve3 = Solver(time, n, "Both.txt", false, 0, 0);
+    Solver solve = Solver(time, n1, "Single1.txt", false, 0, 0, true);
+    Solver solve2 = Solver(time, n, "Single2.txt", false, 0, 0, true);
+    Solver solve3 = Solver(time, n, "Both.txt", false, 0, 0, true);
+    solve.RungeKuttaW(pp);
+    
     
     // Different stepsizes to compare with analytical soulution.
-    Solver solveerror1 = Solver(time, n1, "n1.txt", false, 0, 0);
-    Solver solveerror2 = Solver(time, n2, "n2.txt", false, 0, 0);
-    Solver solveerror3 = Solver(time, n3, "n3.txt", false, 0, 0);
-    Solver solveerror4 = Solver(time, n4, "n4.txt", false, 0, 0);
+    Solver solveerror1 = Solver(time, n1, "n1.txt", false, 0, 0, true);
+    Solver solveerror2 = Solver(time, n2, "n2.txt", false, 0, 0, true);
+    Solver solveerror3 = Solver(time, n3, "n3.txt", false, 0, 0, true);
+    Solver solveerror4 = Solver(time, n4, "n4.txt", false, 0, 0, true);
+    
+    solve3.RungeKuttaW(pp3);
+    
     
     // Actually solving for one and two particle.
     solve.SolveforwardEuler(pp);
-    solve.RungeKutta(pp);
+    solve.RungeKuttaW(pp);
     solve2.SolveforwardEuler(pp2);
-    solve2.RungeKutta(pp2);
+    solve2.RungeKuttaW(pp2);
     solve3.SolveforwardEuler(pp3);
-    solve3.RungeKutta(pp3);
+    solve3.RungeKuttaW(pp3);
+
     
     // Actually solving for the single particle to compare with analytical solution.
     solveerror1.SolveforwardEuler(pp);
-    solveerror1.RungeKutta(pp);
+    solveerror1.RungeKuttaW(pp);
     solveerror2.SolveforwardEuler(pp);
-    solveerror2.RungeKutta(pp);
+    solveerror2.RungeKuttaW(pp);
     solveerror3.SolveforwardEuler(pp);
-    solveerror3.RungeKutta(pp);
+    solveerror3.RungeKuttaW(pp);
     solveerror4.SolveforwardEuler(pp);
-    solveerror4.RungeKutta(pp);
+    solveerror4.RungeKuttaW(pp);
+    
+    
+    /*
+    // Simulation with 100 particles.
+    int newtime = 500;
+    int steps = 100;
+    arma::vec wz = arma::linspace(0.2, 2.5, steps);
+    arma::vec pleft(steps, arma::fill::zeros);
+    PenningTrap pt100 =  PenningTrap(B0, V0, d, false);
+    pt100.fill_with_particles(100, c, m);
+    
+    
+    for (int i = 0; i < steps; i++){
+        std::cout<< i << std::endl;
+        Solver s100 = Solver(newtime, 10000, "null", true, 0.5, wz[i]*1000000, false);
+        s100.RungeKuttaW(pt100);
+        pleft[i] = pt100.count_particles();
+        std::cout << pleft[i] << std::endl;
+    }
+    */
 }
 

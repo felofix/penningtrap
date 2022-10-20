@@ -23,22 +23,26 @@ public:
     bool etimedep; // time dependant electric field.
     double f; // amplitude
     double omegaV; // angular frequency.
+    bool writetofile; // If you want to write to file.
     
     // Declaration function.
-    Solver(double time, double N, std::string filename, bool etimedep, double f, double omegaV);
+    Solver(double time, double N, std::string filename, bool etimedep, double f, double omegaV, bool wrfile);
     
     // Solve with forward-Euler.
+    
     // Needs to be solved for each particle.
     void SolveforwardEuler(PenningTrap pt);
     
-    // Solving with Runge-Kutta.
-    void RungeKutta(PenningTrap p);
+    // Yes, good.
+    void RungeKuttaW(PenningTrap pt);
+    
+    // Yeeeesm, gopppppd.
+    arma::mat forwardRKStepW(Particle p, double ddt, arma::vec vel, arma::vec pos, arma::vec a);
+    
+    void updateposition(PenningTrap &pt, arma::mat velpos);
     
     // Stepping forward like Euler would.
     arma::mat forwardEulerStep(PenningTrap pt, Particle p);
-    
-    // Runge kutta half step.
-    arma::mat forwardRKStep(PenningTrap pt, Particle p, double ddt, arma::vec vel, arma::vec pos);
     
     // Function to print to datafiles. 
     void writetofilefloat(arma::vec timer, arma::mat xyz, std::string direc);
