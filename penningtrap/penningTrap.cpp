@@ -24,9 +24,6 @@ void PenningTrap::printToScreen(){
 arma::vec PenningTrap::find_efield(Particle P){
     arma::vec e_field = {0, 0, 0};
     double distance = sqrt(arma::dot(P.position, P.position));
-    e_field(0) = P.position(0)*gamma;      // x
-    e_field(1) = P.position(1)*gamma;      // y
-    e_field(2) = P.position(2)*gamma*(-2); // z
     
     if (distance < d){
         e_field(0) = P.position(0)*gamma;      // x
@@ -98,8 +95,8 @@ int PenningTrap::count_particles(){
 void PenningTrap::fill_with_particles(int number, double charge, double mass){
     arma::arma_rng::set_seed_random();
     for (int i = 0; i < number; i++){
-        arma::vec pos = arma::vec(3).randn() * 0.1 * d;
-        arma::vec vel = arma::vec(3).randn() * 0.1 * d;
+        arma::vec pos = arma::vec(3).randn()*0.1* d;
+        arma::vec vel = arma::vec(3).randn()*0.1* d;
         particles.push_back(Particle(charge, mass, pos, vel));
     }
 }

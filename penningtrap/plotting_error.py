@@ -54,6 +54,11 @@ xy2 = Ap*np.exp(-1j*omegap*time2) + Am*np.exp(-1j*omegam*time2)
 xy3 = Ap*np.exp(-1j*omegap*time3) + Am*np.exp(-1j*omegam*time3)
 xy4 = Ap*np.exp(-1j*omegap*time4) + Am*np.exp(-1j*omegam*time4)
 
+r1 = np.zeros((4000,3))
+r1[:,0] = np.real(xy1);
+r1[:,1] = np.imag(xy1);
+r1[:,2] = z1;
+
 # relative errors for n = 4000.
 r1 = np.zeros((4000,3))
 r1[:,0] = np.real(xy1);
@@ -64,10 +69,11 @@ r1absdiff = np.zeros(4000)
 r1absdiffeuler = np.zeros(4000)
 
 for i in range(4000):
-    r1len[i] = np.dot(r1[i], r1[i])
-    r1absdiff[i] = np.dot(r1[i] - posRungen1[i, 1:], r1[i] - posRungen1[i, 1:])
-    r1absdiffeuler[i] = np.dot(r1[i] - posEuler1[i, 1:], r1[i] - posEuler1[i, 1:])
-    
+    r1len[i] = np.linalg.norm(r1[i], 2)
+    r1absdiff[i] = np.linalg.norm(r1[i] - posRungen1[i, 1:], 2)
+    r1absdiffeuler[i] = np.linalg.norm(r1[i] - posEuler1[i, 1:], 2)
+    print(r1absdiff[i])
+
 # relative errors for n = 8000.
 r2 = np.zeros((8000,3))
 r2[:,0] = np.real(xy2);
@@ -78,9 +84,9 @@ r2absdiff = np.zeros(8000)
 r2absdiffeuler = np.zeros(8000)
 
 for i in range(8000):
-    r2len[i] = np.dot(r2[i], r2[i])
-    r2absdiff[i] = np.dot(r2[i] - posRungen2[i, 1:], r2[i] - posRungen2[i, 1:])
-    r2absdiffeuler[i] = np.dot(r2[i] - posEuler2[i, 1:], r2[i] - posEuler2[i, 1:])
+    r2len[i] = np.linalg.norm(r2[i], 2)
+    r2absdiff[i] = np.linalg.norm(r2[i] - posRungen2[i, 1:], 2)
+    r2absdiffeuler[i] = np.linalg.norm(r2[i] - posEuler2[i, 1:], 2)
     
 # relative errors for n = 16000.
 r3 = np.zeros((16000,3))
@@ -92,9 +98,9 @@ r3absdiff = np.zeros(16000)
 r3absdiffeuler = np.zeros(16000)
 
 for i in range(16000):
-    r3len[i] = np.dot(r3[i], r3[i])
-    r3absdiff[i] = np.dot(r3[i] - posRungen3[i, 1:], r3[i] - posRungen3[i, 1:])
-    r3absdiffeuler[i] = np.dot(r3[i] - posEuler3[i, 1:], r3[i] - posEuler3[i, 1:])
+    r3len[i] = np.linalg.norm(r3[i], 2)
+    r3absdiff[i] = np.linalg.norm(r3[i] - posRungen3[i, 1:], 2)
+    r3absdiffeuler[i] = np.linalg.norm(r3[i] - posEuler3[i, 1:], 2)
 
 # relative errors for n = 32000.
 r4 = np.zeros((32000,3))
@@ -106,31 +112,27 @@ r4absdiff = np.zeros(32000)
 r4absdiffeuler = np.zeros(32000)
 
 for i in range(32000):
-    r4len[i] = np.dot(r4[i], r4[i])
-    r4absdiff[i] = np.dot(r4[i] - posRungen4[i, 1:], r4[i] - posRungen4[i, 1:])
-    r4absdiffeuler[i] = np.dot(r4[i] - posEuler4[i, 1:], r4[i] - posEuler4[i, 1:])
+    r4len[i] = np.linalg.norm(r4[i], 2)
+    r4absdiff[i] = np.linalg.norm(r4[i] - posRungen4[i, 1:], 2)
+    r4absdiffeuler[i] = np.linalg.norm(r4[i] - posEuler4[i, 1:], 2)
 
-"""# PLotting relative error for runge kutta.
+"""
+# PLotting relative error for runge kutta.
 plt.plot(time1, np.log(r1absdiff/r1len), label = 'RK4 with n = 4000')
 plt.plot(time2, np.log(r2absdiff/r2len), label = 'RK4 with n = 8000')
 plt.plot(time3, np.log(r3absdiff/r3len), label = 'RK4 with n = 16000')
 plt.plot(time4, np.log(r4absdiff/r4len), label = 'RK4 with n = 32000')
+
+# PLotting relative error for Euler.
+plt.plot(time1, np.log(r1absdiffeuler/r1len), label = 'Euler with n = 4000')
+plt.plot(time2, np.log(r2absdiffeuler/r2len), label = 'Euler with n = 8000')
+plt.plot(time3, np.log(r3absdiffeuler/r3len), label = 'Euler with n = 16000')
+plt.plot(time4, np.log(r4absdiffeuler/r4len), label = 'Euler with n = 32000')
 plt.legend()
 plt.show()
-"""
 
-"""# PLotting relative error for Euler.
-plt.plot(time1, r1absdiffeuler/r1len, label = 'Euler with n = 4000')
-plt.plot(time2, r2absdiffeuler/r2len, label = 'Euler with n = 8000')
-plt.plot(time3, r3absdiffeuler/r3len, label = 'Euler with n = 16000')
-plt.plot(time4, r4absdiffeuler/r4len, label = 'Euler with n = 32000')
-plt.legend()
-plt.show()
-"""
-
-"""
 #Max rel error part.
-maxerrorrunge = np.array([np.max(r1absdiff), np.max(r2absdiff), np.max(r3absdiff), np.max(r4absdiff)])
+maxerrorrunge = np.array([np.max(r1absdiff/r1len), np.max(r2absdiff), np.max(r3absdiff), np.max(r4absdiff)])
 maxerroreuler = np.array([np.max(r1absdiffeuler), np.max(r2absdiffeuler), np.max(r3absdiffeuler), np.max(r4absdiffeuler)])
 relerrorrunge = 0
 relerroreuler = 0
@@ -142,3 +144,4 @@ for i in range(1, 4):
     relerroreuler += 1/3*(np.log(maxerroreuler[i]/maxerroreuler[i-1])/(np.log(h[i]/h[i-1])))
 print(relerrorrunge, relerroreuler)
 """
+

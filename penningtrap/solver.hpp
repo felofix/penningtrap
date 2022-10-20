@@ -34,7 +34,7 @@ public:
     void SolveforwardEuler(PenningTrap pt);
     
     // Yes, good.
-    void RungeKuttaW(PenningTrap pt);
+    void RungeKuttaW(PenningTrap &pt);
     
     // Yeeeesm, gopppppd.
     arma::mat forwardRKStepW(Particle p, double ddt, arma::vec vel, arma::vec pos, arma::vec a);

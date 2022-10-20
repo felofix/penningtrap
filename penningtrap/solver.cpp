@@ -18,14 +18,17 @@ Solver::Solver(double t, double NN, std::string fn, bool td, double amp, double 
     writetofile = wrfile;
 }
 
-
-void Solver::RungeKuttaW(PenningTrap pt){
+void Solver::RungeKuttaW(PenningTrap &pt){
     arma::vec timer = arma::linspace(0, time, N);
     arma::mat positions(N, pt.particles.size()*3);
     arma::mat velocities(N, pt.particles.size()*3);
     double initV0 = pt.V0; // For alternativ efield.
+    for (int p = 0; p < pt.particles.size(); p++){ // initial values.
+        velocities(0, arma::span(3*p, 3*p + 2)) = pt.particles[p].velocity.as_row(); // Changing values in positions matrix.
+        positions(0, arma::span(3*p, 3*p + 2)) = pt.particles[p].position.as_row(); // Changing values in positions matrix.
+    }
     
-    for (int i = 0; i < N; i++){
+    for (int i = 1; i < N; i++){
         arma::mat clone(3, pt.particles.size()*2); // Original position and velocity.
         arma::mat k1(3, pt.particles.size()*2);
         arma::mat k2(3, pt.particles.size()*2);
@@ -34,45 +37,58 @@ void Solver::RungeKuttaW(PenningTrap pt){
         arma::mat temp(3, pt.particles.size()*2);
         
         if (etimedep == true){
-            pt.V0 = initV0*(1 + f*cos(omegaV*(timer(i))));
+            pt.gamma = initV0*(1 + f*cos(omegaV*(timer(i))))/pow(pt.d, 2);
         }
-        
-        for (int p = 0; p < pt.particles.size(); p++){ //r_i v_i
+    
+        for (int p = 0; p < pt.particles.size(); p++){
             clone.col(p*2) = pt.particles[p].velocity;     // velocity
             clone.col(p*2 + 1) = pt.particles[p].position; // position
         }
         
         for (int p = 0; p < pt.particles.size(); p++){
+            // Updating k1 for all particles.
             k1.col(p*2) = clone.col(p*2);                           // Velocity.
             k1.col(p*2+1) = pt.total_acceleration(pt.particles[p]); // acceleration.
+            // Forward half-step.
             arma::mat velpos = forwardRKStepW(pt.particles[p], dt/2, clone.col(p*2), clone.col(p*2+1), k1.col(p*2+1)); // first step.
-            temp.col(p*2) = velpos.col(0);   // Velocity.
+            // Changing temp values.
+            temp.col(p*2) = velpos.col(0);       // Velocity.
             temp.col(p*2+1) = velpos.col(1); // Position.
         }
         
+        // Updating position of the particles.
         updateposition(pt, temp);
         
         for (int p = 0; p < pt.particles.size(); p++){
+            // Updating k2 for all particles.
             k2.col(p*2) = pt.particles[p].velocity; // updating k2 velocity.
             k2.col(p*2+1) = pt.total_acceleration(pt.particles[p]); // updating k2 accel.
+            // Forward half-step.
             arma::mat velpos = forwardRKStepW(pt.particles[p], dt/2, clone.col(p*2), clone.col(p*2+1), k2.col(p*2+1)); // second step
+            // Changing temp values.
             temp.col(p*2) = velpos.col(0);   // Velocity
             temp.col(p*2+1) = velpos.col(1); // Position.
         }
         
+        // Updating position of the particles.
         updateposition(pt, temp);
         
         for (int p = 0; p < pt.particles.size(); p++){
+            // Updating k3 for all particles.
             k3.col(p*2) = pt.particles[p].velocity; // updating k3 velocity.
             k3.col(p*2+1) = pt.total_acceleration(pt.particles[p]);
+            // Forward half-step.
             arma::mat velpos = forwardRKStepW(pt.particles[p], dt, clone.col(p*2), clone.col(p*2+1), k3.col(p*2+1)); // third step
+            // Changing temp values.
             temp.col(p*2) = velpos.col(0); // Velocity
             temp.col(p*2+1) = velpos.col(1); // Position.
         }
         
+        // Updating position of the particles.
         updateposition(pt, temp);
         
         for (int p = 0; p < pt.particles.size(); p++){
+            // Updating k4 for all particles.
             k4.col(p*2) = pt.particles[p].velocity;
             k4.col(p*2+1) = pt.total_acceleration(pt.particles[p]);
         }
@@ -80,8 +96,8 @@ void Solver::RungeKuttaW(PenningTrap pt){
         arma::mat godupdate = (k1 + 2*k2 + 2*k3 + k4)/6;
         
         for (int p = 0; p < pt.particles.size(); p++){   // Chaning the values of the particles.
-            pt.particles[p].position = clone.col(p*2+1) + godupdate.col(0)*dt;
-            pt.particles[p].velocity = clone.col(p*2) + godupdate.col(1)*dt;
+            pt.particles[p].position = clone.col(p*2+1) + godupdate.col(p*2)*dt;
+            pt.particles[p].velocity = clone.col(p*2) + godupdate.col(p*2+1)*dt;
             velocities(i, arma::span(3*p, 3*p + 2)) = pt.particles[p].velocity.as_row(); // Changing values in positions matrix.
             positions(i, arma::span(3*p, 3*p + 2)) = pt.particles[p].position.as_row(); // Changing values in positions matrix.
         }
@@ -104,11 +120,17 @@ void Solver::SolveforwardEuler(PenningTrap pt){
     arma::mat positions(N, pt.particles.size()*3); // Create a position matrix for all particles.
     arma::mat velocities(N, pt.particles.size()*3); // Create a position matrix for all particles.
     
-    for (int i = 0; i < N; i++){ // For all timesteps.
+    // initial values.
+    for (int p = 0; p < pt.particles.size(); p++){
+        velocities(0, arma::span(3*p, 3*p + 2)) = pt.particles[p].velocity.as_row(); // Changing values in positions matrix.
+        positions(0, arma::span(3*p, 3*p + 2)) = pt.particles[p].position.as_row(); // Changing values in positions matrix.
+    }
+    
+    for (int i = 1; i < N; i++){ // For all timesteps.
         // Put it here so we get zeros if something isnt filled.
         arma::mat temp(3, pt.particles.size()*2);      // temporary particle positions and veloicities.
         for (int j = 0; j < pt.particles.size(); j++){ // For all particles.
-            arma::mat velpos = forwardEulerStep(pt, pt.particles[j]); // Forward-Euler step for paarticle j.
+            arma::mat velpos = forwardEulerStep(pt, pt.particles[j]); // Forward-Euler step for particle j.
             temp.col(j*2) = velpos.col(0);
             temp.col(j*2+1) = velpos.col(1);
         }

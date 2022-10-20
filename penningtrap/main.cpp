@@ -35,8 +35,8 @@ int main(int argc, const char * argv[]) {
     double n3 = 16000;
     double n4 = 32000;
     
+    /*
     // Classes.
-    
     arma::vec posi1 = {p1x0, 0, p1z0};
     arma::vec posi2 = {p2x0, p2y0, 0};
     arma::vec vel = {0, p1ydot, 0};
@@ -87,9 +87,8 @@ int main(int argc, const char * argv[]) {
     solveerror3.RungeKuttaW(pp);
     solveerror4.SolveforwardEuler(pp);
     solveerror4.RungeKuttaW(pp);
+    */
     
-    
-    /*
     // Simulation with 100 particles.
     int newtime = 500;
     int steps = 100;
@@ -97,15 +96,13 @@ int main(int argc, const char * argv[]) {
     arma::vec pleft(steps, arma::fill::zeros);
     PenningTrap pt100 =  PenningTrap(B0, V0, d, false);
     pt100.fill_with_particles(100, c, m);
-    
-    
+
     for (int i = 0; i < steps; i++){
         std::cout<< i << std::endl;
-        Solver s100 = Solver(newtime, 10000, "null", true, 0.5, wz[i]*1000000, false);
+        Solver s100 = Solver(newtime, 20000, "null", true, 0.7, wz[i], false);
         s100.RungeKuttaW(pt100);
         pleft[i] = pt100.count_particles();
-        std::cout << pleft[i] << std::endl;
     }
-    */
+    
 }
 
