@@ -13,6 +13,7 @@
 #include <vector>
 #include "particle.hpp"
 #include "penningTrap.hpp"
+#include <complex> 
 
 class Solver{
 public:
@@ -24,9 +25,10 @@ public:
     double f; // amplitude
     double omegaV; // angular frequency.
     bool writetofile; // If you want to write to file.
+    bool errorplot; //
     
     // Declaration function.
-    Solver(double time, double N, std::string filename, bool etimedep, double f, double omegaV, bool wrfile);
+    Solver(double time, double N, std::string filename, bool etimedep, double f, double omegaV, bool wrfile, bool errorplot);
     
     // Solve with forward-Euler.
     
@@ -47,6 +49,11 @@ public:
     // Function to print to datafiles. 
     void writetofilefloat(arma::vec timer, arma::mat xyz, std::string direc);
     
+    // Analytical soulution.
+    void solve_analytically(PenningTrap pt, arma::mat numeric, std::string euorru);
+    
+    //
+    arma::mat create_analytical(PenningTrap pt);
 };
 
 #endif /* solver_hpp */

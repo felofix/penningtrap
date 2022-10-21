@@ -35,7 +35,6 @@ int main(int argc, const char * argv[]) {
     double n3 = 16000;
     double n4 = 32000;
     
-    /*
     // Classes.
     arma::vec posi1 = {p1x0, 0, p1z0};
     arma::vec posi2 = {p2x0, p2y0, 0};
@@ -46,63 +45,81 @@ int main(int argc, const char * argv[]) {
     PenningTrap pp = PenningTrap(B0, V0, d, true);  // For just the first particle.
     PenningTrap pp2 = PenningTrap(B0, V0, d, true); // For just the second particle.
     PenningTrap pp3 = PenningTrap(B0, V0, d, true); // For both particles.
+    PenningTrap pperror1 = PenningTrap(B0, V0, d, true); // for error.
+    PenningTrap pperror2 = PenningTrap(B0, V0, d, true); // for error.
+    PenningTrap pperror3 = PenningTrap(B0, V0, d, true); // for error.
+    PenningTrap pperror4 = PenningTrap(B0, V0, d, true); // for error.
     
     // Adding particles.
     pp.add_particle(calcium1);
     pp2.add_particle(calcium2);
     pp3.add_particle(calcium1);
     pp3.add_particle(calcium2);
+    pperror1.add_particle(calcium1);
+    pperror2.add_particle(calcium1);
+    pperror3.add_particle(calcium1);
+    pperror4.add_particle(calcium1);
     
     // Solving for particles.
-    Solver solve = Solver(time, n1, "Single1.txt", false, 0, 0, true);
-    Solver solve2 = Solver(time, n, "Single2.txt", false, 0, 0, true);
-    Solver solve3 = Solver(time, n, "Both.txt", false, 0, 0, true);
-    solve.RungeKuttaW(pp);
-    
+    Solver solve = Solver(time, n, "Single1.txt", false, 0, 0, true, false);
+    Solver solve2 = Solver(time, n, "Single2.txt", false, 0, 0, true, false);
+    Solver solve3 = Solver(time, n, "Both.txt", false, 0, 0, true, false);
     
     // Different stepsizes to compare with analytical soulution.
-    Solver solveerror1 = Solver(time, n1, "n1.txt", false, 0, 0, true);
-    Solver solveerror2 = Solver(time, n2, "n2.txt", false, 0, 0, true);
-    Solver solveerror3 = Solver(time, n3, "n3.txt", false, 0, 0, true);
-    Solver solveerror4 = Solver(time, n4, "n4.txt", false, 0, 0, true);
-    
-    solve3.RungeKuttaW(pp3);
-    
+    Solver solveerror1 = Solver(time, n1, "n1.txt", false, 0, 0, false, true);
+    Solver solveerror2 = Solver(time, n2, "n2.txt", false, 0, 0, false, true);
+    Solver solveerror3 = Solver(time, n3, "n3.txt", false, 0, 0, false, true);
+    Solver solveerror4 = Solver(time, n4, "n4.txt", false, 0, 0, false, true);
     
     // Actually solving for one and two particle.
+    /*
     solve.SolveforwardEuler(pp);
     solve.RungeKuttaW(pp);
     solve2.SolveforwardEuler(pp2);
     solve2.RungeKuttaW(pp2);
     solve3.SolveforwardEuler(pp3);
     solve3.RungeKuttaW(pp3);
-
-    
-    // Actually solving for the single particle to compare with analytical solution.
-    solveerror1.SolveforwardEuler(pp);
-    solveerror1.RungeKuttaW(pp);
-    solveerror2.SolveforwardEuler(pp);
-    solveerror2.RungeKuttaW(pp);
-    solveerror3.SolveforwardEuler(pp);
-    solveerror3.RungeKuttaW(pp);
-    solveerror4.SolveforwardEuler(pp);
-    solveerror4.RungeKuttaW(pp);
     */
     
+    // Actually solving for the single particle to compare with analytical solution.
+    solveerror1.SolveforwardEuler(pperror1);
+    solveerror1.RungeKuttaW(pperror1);
+    solveerror2.SolveforwardEuler(pperror2);
+    solveerror2.RungeKuttaW(pperror2);
+    solveerror3.SolveforwardEuler(pperror3);
+    solveerror3.RungeKuttaW(pperror3);
+    solveerror4.SolveforwardEuler(pperror4);
+    solveerror4.RungeKuttaW(pperror4);
+    
+    /*
     // Simulation with 100 particles.
     int newtime = 500;
-    int steps = 100;
-    arma::vec wz = arma::linspace(0.2, 2.5, steps);
-    arma::vec pleft(steps, arma::fill::zeros);
-    PenningTrap pt100 =  PenningTrap(B0, V0, d, false);
-    pt100.fill_with_particles(100, c, m);
+    int steps = 10;
+    int particles = 1;
+    std::vector<double> f = {0.1, 0.4, 0.7};
+    for (int j = 0; j < f.size(); j++){
+        arma::vec wz = arma::linspace(0.2, 2.5, steps);
+        arma::vec pleft(steps, arma::fill::zeros);
+        PenningTrap pt100 =  PenningTrap(B0, V0, d, false);
+        pt100.fill_with_particles(particles, c, m);
 
-    for (int i = 0; i < steps; i++){
-        std::cout<< i << std::endl;
-        Solver s100 = Solver(newtime, 20000, "null", true, 0.7, wz[i], false);
-        s100.RungeKuttaW(pt100);
-        pleft[i] = pt100.count_particles();
+        for (int i = 0; i < steps; i++){ // For f = 0.1.
+            std::cout<< i << std::endl;
+            Solver s100 = Solver(newtime, 20000, "null", true, f[j], wz[i], false);
+            s100.RungeKuttaW(pt100);
+            pleft[i] = pt100.count_particles();
+        }
+        
+        std::ofstream fw("datafiles/f" + std::to_string(f[j] + ".txt", std::ofstream::out);  // Setting the stream to output.
+        if (fw.is_open())
+        {
+          for (int g = 0; g < wz.n_rows; g++) {
+              fw << wz(g) << " " << pleft(g) << "\n";
+          }
+          fw.close();
+        }
+        else std::cout << "The file couldnt be opened. " << std::endl;
     }
-    
+    */
 }
 

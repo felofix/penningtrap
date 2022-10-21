@@ -7,7 +7,7 @@
 
 #include "solver.hpp"
 
-Solver::Solver(double t, double NN, std::string fn, bool td, double amp, double oV, bool wrfile){
+Solver::Solver(double t, double NN, std::string fn, bool td, double amp, double oV, bool wrfile, bool err){
     time = t;           // Length of simulation.
     N = NN;             // Steps of simulation.
     filename = fn;  // Outputting data to datafiles folder.
@@ -16,6 +16,7 @@ Solver::Solver(double t, double NN, std::string fn, bool td, double amp, double 
     f = amp;
     omegaV = oV;
     writetofile = wrfile;
+    errorplot = err;
 }
 
 void Solver::RungeKuttaW(PenningTrap &pt){
@@ -103,6 +104,10 @@ void Solver::RungeKuttaW(PenningTrap &pt){
         }
     }
     
+    if (errorplot == true){
+        solve_analytically(pt, positions, "runge");
+    }
+    
     if (writetofile == true){
         // Printing data to datafiles.
         for (int p = 0; p < pt.particles.size(); p++){
@@ -145,11 +150,17 @@ void Solver::SolveforwardEuler(PenningTrap pt){
     }
     // Printing data to datafiles.
     
-    for (int p = 0; p < pt.particles.size(); p++){
-        std::string postring = "datafiles/pos_euler_part_" + std::to_string(p) + filename;
-        std::string velstring = "datafiles/vel_euler_part_" + std::to_string(p) + filename;
-        writetofilefloat(timer, positions(arma::span(0, N-1), arma::span(3*p, 3*p + 2)), postring);
-        writetofilefloat(timer, velocities(arma::span(0, N-1), arma::span(3*p, 3*p + 2)), velstring);
+    if (errorplot == true){
+        solve_analytically(pt, positions, "euler");
+    }
+    
+    if (writetofile == true){
+        for (int p = 0; p < pt.particles.size(); p++){
+            std::string postring = "datafiles/pos_euler_part_" + std::to_string(p) + filename;
+            std::string velstring = "datafiles/vel_euler_part_" + std::to_string(p) + filename;
+            writetofilefloat(timer, positions(arma::span(0, N-1), arma::span(3*p, 3*p + 2)), postring);
+            writetofilefloat(timer, velocities(arma::span(0, N-1), arma::span(3*p, 3*p + 2)), velstring);
+        }
     }
 }
 
@@ -177,13 +188,54 @@ arma::mat Solver::forwardEulerStep(PenningTrap pt, Particle p){
     return velpos;
 }
 
+void Solver::solve_analytically(PenningTrap pt, arma::mat numeric, std::string euorru){
+    arma::vec timearray = arma::linspace(0, time, N);
+    arma::mat analytical = create_analytical(pt);
+    std::string abserrorstring = "datafiles/abserrorN" + euorru + std::to_string((int)N) + ".txt";
+    std::string relerrorstring = "datafiles/relerrorN" + euorru + std::to_string((int)N) + ".txt";
+    arma::vec abserror(N);
+    arma::vec relerror(N);
+    
+    for (int i = 0; i < N; i++){
+        abserror[i] = arma::norm(analytical.row(i) - numeric.row(i), 2);
+        relerror[i] = abserror[i]/(arma::norm(analytical.row(i), 2));
+    }
+    
+    writetofilefloat(timearray, abserror, abserrorstring);
+    writetofilefloat(timearray, relerror, relerrorstring);
+}
+
+arma::mat Solver::create_analytical(PenningTrap pt){
+    // constants
+    double omega2z = (2*pt.particles[0].charge*pt.V0)/(pt.particles[0].mass*pow((pt.d),2));
+    double omega0 = (pt.particles[0].charge*pt.B0)/pt.particles[0].mass;
+    double v0 = 25;
+    double x0 = 20;
+    double z0 = 20;
+    double omegaplus = (omega0 + sqrt(pow(omega0,2) - 2*omega2z))/2;
+    double omegaminus = (omega0 - sqrt(pow(omega0,2) - 2*omega2z))/2;
+    double Ap = (v0 + omegaminus*x0)/(omegaminus - omegaplus);
+    double Am = -(v0 + omegaplus*x0)/(omegaminus - omegaplus);
+    arma::vec timearray = arma::linspace(0, time, N);
+    arma::mat posvel(N, 3);
+    std::complex<double> i(0.0, 1.0);
+    
+    for (int j = 0; j < N; j++){
+        posvel.row(j)(2) = z0*cos(sqrt(omega2z)*timearray[j]);
+        std::complex<double> xy = Ap*exp(-i*omegaplus*timearray[j]) + Am*exp(-i*omegaminus*timearray[j]);
+        posvel.row(j)(0) = xy.real();
+        posvel.row(j)(1) = xy.imag();
+    }
+    return posvel;
+}
+
 void Solver::writetofilefloat(arma::vec timer, arma::mat xyz, std::string direc){
     // Writing to file with float values.
     std::ofstream fw(direc, std::ofstream::out);  // Setting the stream to output.
     if (fw.is_open())
     {
       for (int i = 0; i < xyz.n_rows; i++) {
-          fw << timer(i) << " " << xyz.row(i) << "\n";
+      fw << timer(i) << xyz.row(i) << "\n";
       }
       fw.close();
     }
