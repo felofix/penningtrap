@@ -35,10 +35,10 @@ public:
     // Needs to be solved for each particle.
     void SolveforwardEuler(PenningTrap pt);
     
-    // Yes, good.
+    // Rung-kutta solver. 
     void RungeKuttaW(PenningTrap &pt);
     
-    // Yeeeesm, gopppppd.
+    // Runge-kutta step.
     arma::mat forwardRKStepW(Particle p, double ddt, arma::vec vel, arma::vec pos, arma::vec a);
     
     void updateposition(PenningTrap &pt, arma::mat velpos);

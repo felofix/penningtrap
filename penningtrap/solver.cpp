@@ -8,36 +8,36 @@
 #include "solver.hpp"
 
 Solver::Solver(double t, double NN, std::string fn, bool td, double amp, double oV, bool wrfile, bool err){
-    time = t;           // Length of simulation.
-    N = NN;             // Steps of simulation.
-    filename = fn;  // Outputting data to datafiles folder.
-    dt = time/N;    // timestep.
-    etimedep = td;
-    f = amp;
-    omegaV = oV;
-    writetofile = wrfile;
-    errorplot = err;
+    time = t;             // Length of simulation.
+    N = NN;               // Steps of simulation.
+    filename = fn;        // Outputting data to datafiles folder.
+    dt = time/N;          // timestep.
+    etimedep = td;        // Time dependant e field.
+    f = amp;              // amplitude.
+    omegaV = oV;          // time-dependant potential.
+    writetofile = wrfile; // write to file bool.
+    errorplot = err;      // errorplot bool.
 }
 
 void Solver::RungeKuttaW(PenningTrap &pt){
     arma::vec timer = arma::linspace(0, time, N);
     arma::mat positions(N, pt.particles.size()*3);
     arma::mat velocities(N, pt.particles.size()*3);
-    double initV0 = pt.V0; // For alternativ efield.
+    double initV0 = pt.V0;                         // For alternativ efield.
     for (int p = 0; p < pt.particles.size(); p++){ // initial values.
         velocities(0, arma::span(3*p, 3*p + 2)) = pt.particles[p].velocity.as_row(); // Changing values in positions matrix.
-        positions(0, arma::span(3*p, 3*p + 2)) = pt.particles[p].position.as_row(); // Changing values in positions matrix.
+        positions(0, arma::span(3*p, 3*p + 2)) = pt.particles[p].position.as_row();  // Changing values in positions matrix.
     }
     
     for (int i = 1; i < N; i++){
         arma::mat clone(3, pt.particles.size()*2); // Original position and velocity.
-        arma::mat k1(3, pt.particles.size()*2);
-        arma::mat k2(3, pt.particles.size()*2);
-        arma::mat k3(3, pt.particles.size()*2);
-        arma::mat k4(3, pt.particles.size()*2);
-        arma::mat temp(3, pt.particles.size()*2);
+        arma::mat k1(3, pt.particles.size()*2);    // k1
+        arma::mat k2(3, pt.particles.size()*2);    // k2
+        arma::mat k3(3, pt.particles.size()*2);    // k3
+        arma::mat k4(3, pt.particles.size()*2);    // k4
+        arma::mat temp(3, pt.particles.size()*2);  // Temp for temporary values.
         
-        if (etimedep == true){
+        if (etimedep == true){  // Cheking for time-dependant applied field.
             pt.gamma = initV0*(1 + f*cos(omegaV*(timer(i))))/pow(pt.d, 2);
         }
     
@@ -94,11 +94,11 @@ void Solver::RungeKuttaW(PenningTrap &pt){
             k4.col(p*2+1) = pt.total_acceleration(pt.particles[p]);
         }
         
-        arma::mat godupdate = (k1 + 2*k2 + 2*k3 + k4)/6;
+        arma::mat rungeupdate = (k1 + 2*k2 + 2*k3 + k4)/6;
         
         for (int p = 0; p < pt.particles.size(); p++){   // Chaning the values of the particles.
-            pt.particles[p].position = clone.col(p*2+1) + godupdate.col(p*2)*dt;
-            pt.particles[p].velocity = clone.col(p*2) + godupdate.col(p*2+1)*dt;
+            pt.particles[p].position = clone.col(p*2+1) + rungeupdate.col(p*2)*dt;
+            pt.particles[p].velocity = clone.col(p*2) + rungeupdate.col(p*2+1)*dt;
             velocities(i, arma::span(3*p, 3*p + 2)) = pt.particles[p].velocity.as_row(); // Changing values in positions matrix.
             positions(i, arma::span(3*p, 3*p + 2)) = pt.particles[p].position.as_row(); // Changing values in positions matrix.
         }
@@ -174,12 +174,12 @@ void Solver::updateposition(PenningTrap &pt, arma::mat velpos){
 arma::mat Solver::forwardRKStepW(Particle p, double ddt, arma::vec vel, arma::vec pos, arma::vec a){
     arma::mat velpos(3, 2);
     velpos.col(1) = pos + p.velocity*ddt; // Velocity.
-    velpos.col(0) = vel + a*ddt; // Position.
+    velpos.col(0) = vel + a*ddt;          // Position.
     return velpos;
 }
 
-// Stepping forward like Euler would.
-arma::mat Solver::forwardEulerStep(PenningTrap pt, Particle p){
+    
+arma::mat Solver::forwardEulerStep(PenningTrap pt, Particle p){ // Stepping forward like Euler would.
     // Number refers to which particle we are looking at.
     // Returns both velocity and position so that we can use it for Runge-Kutta aswell.
     arma::mat velpos(3, 2);
@@ -197,16 +197,16 @@ void Solver::solve_analytically(PenningTrap pt, arma::mat numeric, std::string e
     arma::vec relerror(N);
     
     for (int i = 0; i < N; i++){
-        abserror[i] = arma::norm(analytical.row(i) - numeric.row(i), 2);
-        relerror[i] = abserror[i]/(arma::norm(analytical.row(i), 2));
+        abserror[i] = arma::norm(analytical.row(i) - numeric.row(i), 2);  // Finding abserror.
+        relerror[i] = abserror[i]/(arma::norm(analytical.row(i), 2));     // FInding relerror.
     }
-    
+    // Printing out analytical soulution.
     writetofilefloat(timearray, abserror, abserrorstring);
     writetofilefloat(timearray, relerror, relerrorstring);
 }
 
 arma::mat Solver::create_analytical(PenningTrap pt){
-    // constants
+    // Constants
     double omega2z = (2*pt.particles[0].charge*pt.V0)/(pt.particles[0].mass*pow((pt.d),2));
     double omega0 = (pt.particles[0].charge*pt.B0)/pt.particles[0].mass;
     double v0 = 25;
@@ -216,10 +216,13 @@ arma::mat Solver::create_analytical(PenningTrap pt){
     double omegaminus = (omega0 - sqrt(pow(omega0,2) - 2*omega2z))/2;
     double Ap = (v0 + omegaminus*x0)/(omegaminus - omegaplus);
     double Am = -(v0 + omegaplus*x0)/(omegaminus - omegaplus);
+    
+    // Arrays.
     arma::vec timearray = arma::linspace(0, time, N);
     arma::mat posvel(N, 3);
-    std::complex<double> i(0.0, 1.0);
+    std::complex<double> i(0.0, 1.0); // Complex number i.
     
+    // Analytical soulution.
     for (int j = 0; j < N; j++){
         posvel.row(j)(2) = z0*cos(sqrt(omega2z)*timearray[j]);
         std::complex<double> xy = Ap*exp(-i*omegaplus*timearray[j]) + Am*exp(-i*omegaminus*timearray[j]);

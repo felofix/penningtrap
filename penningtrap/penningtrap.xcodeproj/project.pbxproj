@@ -11,7 +11,6 @@
 		DC24A96228E6B88F00198A1F /* particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC24A96028E6B88F00198A1F /* particle.cpp */; };
 		DC24A96528E6E71300198A1F /* penningTrap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC24A96328E6E71300198A1F /* penningTrap.cpp */; };
 		DC24A96828E74A9E00198A1F /* solver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC24A96628E74A9E00198A1F /* solver.cpp */; };
-		DC557D702901B66600F2A6F7 /* analytical.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DC557D6E2901B66600F2A6F7 /* analytical.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,8 +34,6 @@
 		DC24A96428E6E71300198A1F /* penningTrap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = penningTrap.hpp; sourceTree = "<group>"; };
 		DC24A96628E74A9E00198A1F /* solver.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = solver.cpp; sourceTree = "<group>"; };
 		DC24A96728E74A9E00198A1F /* solver.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = solver.hpp; sourceTree = "<group>"; };
-		DC557D6E2901B66600F2A6F7 /* analytical.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = analytical.cpp; sourceTree = "<group>"; };
-		DC557D6F2901B66600F2A6F7 /* analytical.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = analytical.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,8 +50,6 @@
 		DC24A94D28E6B80D00198A1F = {
 			isa = PBXGroup;
 			children = (
-				DC557D6E2901B66600F2A6F7 /* analytical.cpp */,
-				DC557D6F2901B66600F2A6F7 /* analytical.hpp */,
 				DC24A96628E74A9E00198A1F /* solver.cpp */,
 				DC24A96728E74A9E00198A1F /* solver.hpp */,
 				DC24A96328E6E71300198A1F /* penningTrap.cpp */,
@@ -142,7 +137,6 @@
 				DC24A96528E6E71300198A1F /* penningTrap.cpp in Sources */,
 				DC24A95A28E6B80D00198A1F /* main.cpp in Sources */,
 				DC24A96828E74A9E00198A1F /* solver.cpp in Sources */,
-				DC557D702901B66600F2A6F7 /* analytical.cpp in Sources */,
 				DC24A96228E6B88F00198A1F /* particle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

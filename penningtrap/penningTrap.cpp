@@ -8,7 +8,7 @@
 #include "penningTrap.hpp"
 
 PenningTrap::PenningTrap(double b, double v, double d2, bool coul){
-    B0 = b;
+    B0 = b;   
     V0 = v;
     d = d2;
     gamma = V0/pow(d, 2);
@@ -25,7 +25,7 @@ arma::vec PenningTrap::find_efield(Particle P){
     arma::vec e_field = {0, 0, 0};
     double distance = sqrt(arma::dot(P.position, P.position));
     
-    if (distance < d){
+    if (distance < d){    // Cheking if the particle is within penning trap.
         e_field(0) = P.position(0)*gamma;      // x
         e_field(1) = P.position(1)*gamma;      // y
         e_field(2) = P.position(2)*gamma*(-2); // z
@@ -37,7 +37,7 @@ arma::vec PenningTrap::find_efield(Particle P){
 arma::vec PenningTrap::find_mfield(Particle P){
     arma::vec m_field = {0, 0, 0};
     double distance = sqrt(arma::dot(P.position, P.position));
-    if (distance < d){
+    if (distance < d){ // Cheking if the particle is within penning trap.
         m_field(2) = B0; // z
     }
     return m_field;
@@ -51,7 +51,7 @@ arma::vec PenningTrap::force_from_particles(Particle pcheck){
     arma::vec force_from_others = {0, 0, 0};
     for (int i = 0; i < particles.size(); i++){
         // Finding distance between particles.
-        arma::vec posdiff = pcheck.position - particles[i].position; // Difference in position vector.
+        arma::vec posdiff = pcheck.position - particles[i].position;       // Difference in position vector.
         double distance2 = sqrt(arma::dot(posdiff, posdiff));              // Distance raised to second power
         
         if (distance2 != 0){
@@ -85,7 +85,7 @@ int PenningTrap::count_particles(){
     int count = 0;
     for (int i = 0; i < particles.size(); i++){        
         double distance = sqrt(arma::dot(particles[i].position, particles[i].position));
-        if (distance < d){
+        if (distance < d){ // Cheking if the particle is within penning trap.
             count++;
         }
     }
@@ -93,7 +93,7 @@ int PenningTrap::count_particles(){
 }
 
 void PenningTrap::fill_with_particles(int number, double charge, double mass){
-    arma::arma_rng::set_seed_random();
+    arma::arma_rng::set_seed_random(); // Initilizing randomness. 
     for (int i = 0; i < number; i++){
         arma::vec pos = arma::vec(3).randn()*0.1* d;
         arma::vec vel = arma::vec(3).randn()*0.1* d;
