@@ -5,6 +5,7 @@ The following classes are used in solving of penning trap models:
 - PenningTrap. Sets up the environment for modelling of the pt. 
 - Solver. Numerical FE, Fourth-order Runge-Kutta and analytical soulutions.
 
+To create a program which you have defined in main, simply run the make program in your termimnal.
 Have fun!
 
 This project is created by Felix Forseth and Edvin Jarve.
