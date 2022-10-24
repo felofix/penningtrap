@@ -38,8 +38,8 @@ plt.plot(RK3abserror[1:, 0], np.log(RK3relerror[1:, 1]), label = 'RK4 with n = 1
 plt.plot(RK4abserror[1:, 0], np.log(RK4relerror[1:, 1]), label = 'RK4 with n = 32000', color='#483248')
 plt.xlabel("t [$\mu s$]")
 plt.ylabel("$log(|\\frac{r_{exact} - r_{numeric}}{r_{exact}}|)$")
-plt.savefig("Relative error for different values of n with fourth-order Runge-Kutta.pdf")
 plt.legend()
+plt.savefig("Relative error for different values of n with fourth-order Runge-Kutta.pdf")
 plt.show()
 
 # PLotting relative error for Euler.
@@ -50,8 +50,8 @@ plt.plot(EU3abserror[1:, 0], np.log(EU3relerror[1:, 1]), label = 'RK4 with n = 1
 plt.plot(EU4relerror[1:, 0], np.log(EU4relerror[1:, 1]), label = 'RK4 with n = 32000', color='#483248')
 plt.xlabel("t [$\mu s$]")
 plt.ylabel("$log(|\\frac{r_{exact} - r_{numeric}}{r_{exact}}|)$")
-plt.savefig("Relative error for different values of n with Forward-Euler.pdf")
 plt.legend()
+plt.savefig("Relative error for different values of n with Forward-Euler.pdf")
 plt.show()
 
 

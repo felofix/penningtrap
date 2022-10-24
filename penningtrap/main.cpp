@@ -75,7 +75,7 @@ int main(int argc, const char * argv[]) {
     */
     
     
-    /* // Different stepsizes to compare with analytical soulution.
+     // Different stepsizes to compare with analytical soulution.
     Solver solveerror1 = Solver(time, n1, "n1.txt", false, 0, 0, false, true);
     Solver solveerror2 = Solver(time, n2, "n2.txt", false, 0, 0, false, true);
     Solver solveerror3 = Solver(time, n3, "n3.txt", false, 0, 0, false, true);
@@ -90,7 +90,7 @@ int main(int argc, const char * argv[]) {
     solveerror3.RungeKuttaW(pperror3);
     solveerror4.SolveforwardEuler(pperror4);
     solveerror4.RungeKuttaW(pperror4);
-    */
+    
      
     
     /*// Simulation with 100 particles for three different amplitudes.

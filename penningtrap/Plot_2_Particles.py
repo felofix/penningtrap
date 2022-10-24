@@ -17,12 +17,21 @@ Both2poseuler = np.loadtxt("datafiles/pos_euler_part_1Both.txt")
 Both1vel = np.loadtxt("datafiles/vel_runge_part_0Both.txt")
 Both2vel = np.loadtxt("datafiles/vel_runge_part_1Both.txt")
 
-
 # Position in z direction for single particle.
+q = 1
+z_0 = 20
+V_0 = 2.41 * 10**7
+m = 4.0078 * 10**2
+d = 5 * 10**2
+t = np.linspace(0,50,1000)
+omega = np.sqrt(2*q*V_0/(m*d**2))
+def analytisk(t):
+    return z_0 * np.cos(omega*t)
 plt.title(f"Position of a single particle in $z$-direction with RK4 and Forward Euler")
 plt.plot(Single1pos[:, 0], Single1pos[:, 3], label='RK4', color='black')
+plt.plot(t, analytisk(t), label = "Analyical soltuion", color='r')
 plt.plot(Single1poseuler[:, 0], Single1poseuler[:, 3], label='Forwrd Euler', color=halloween[1])
-plt.xlabel('Time [t]')
+plt.xlabel('Time [$\mu t$]')
 plt.grid()
 plt.ylabel('z(t) [$\mu m$]')
 plt.legend()
